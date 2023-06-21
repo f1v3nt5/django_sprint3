@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-import datetime
 
 
 User = get_user_model()
@@ -23,12 +22,14 @@ class Post(models.Model):
         'Location',
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         verbose_name='Местоположение'
     )
     category = models.ForeignKey(
         'Category',
         on_delete=models.SET_NULL,
         null=True,
+        blank=False,
         verbose_name='Категория'
     )
     is_published = models.BooleanField(

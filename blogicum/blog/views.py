@@ -39,7 +39,7 @@ def post_detail(request, id):
 def category_posts(request, category_slug):
     category = get_object_or_404(Category.objects.values(
         'title', 'description', 'slug'
-    ).filter(is_published=True,  slug=category_slug))
+    ).filter(is_published=True, slug=category_slug))
     post_list = Post.objects.filter(
         is_published=True,
         category__slug=category_slug,

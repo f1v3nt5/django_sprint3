@@ -13,13 +13,13 @@ def post_pub_filter():
         is_published=True,
         category__is_published=True,
         pub_date__lte=datetime.now()
+    ).select_related(
+        'location', 'category', 'author'
     )
 
 
 def index(request):
-    post_list = post_pub_filter().select_related(
-        'location', 'category', 'author'
-    ).order_by('-pub_date')[:POSTS_COUNT]
+    post_list = post_pub_filter().order_by('-pub_date')[:POSTS_COUNT]
     context = {
         'post_list': post_list
     }
@@ -27,9 +27,7 @@ def index(request):
 
 
 def post_detail(request, id):
-    post = get_object_or_404(post_pub_filter().select_related(
-        'location', 'category', 'author'
-    ), pk=id)
+    post = get_object_or_404(post_pub_filter(), pk=id)
     context = {
         'post': post
     }
@@ -37,15 +35,12 @@ def post_detail(request, id):
 
 
 def category_posts(request, category_slug):
-    category = get_object_or_404(Category.objects.values(
-        'title', 'description', 'slug'
-    ).filter(is_published=True, slug=category_slug))
-    post_list = Post.objects.filter(
+    category = get_object_or_404(
+        Category, is_published=True,
+        slug=category_slug)
+    post_list = category.categories.filter(
         is_published=True,
-        category__slug=category_slug,
         pub_date__lte=datetime.now()
-    ).select_related('category').order_by(
-        '-pub_date'
     )
     context = {
         'category': category,

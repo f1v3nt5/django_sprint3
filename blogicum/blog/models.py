@@ -30,7 +30,8 @@ class Post(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=False,
-        verbose_name='Категория'
+        verbose_name='Категория',
+        related_name='categories'
     )
     is_published = models.BooleanField(
         default=True,
